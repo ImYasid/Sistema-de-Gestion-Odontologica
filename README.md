@@ -52,7 +52,7 @@ Una vez desplegado el sistema, la documentación interactiva de los endpoints es
 
 La guía detallada para el uso de la aplicación por parte de doctores y administradores se encuentra disponible en formato PDF en el directorio de documentación:
 
-> 📘 **[Descargar Manual de Usuario](https://www.google.com/search?q=./docs/Manual_Usuario_Endonova.pdf)**
+> 📘 **[Descargar Manual de Usuario](https://www.google.com/search?q=./Docs/ManualUsuario.txt)**
 
 ---
 
