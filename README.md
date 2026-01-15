@@ -52,17 +52,18 @@ Una vez desplegado el sistema, la documentación interactiva de los endpoints es
 
 La guía detallada para el uso de la aplicación por parte de doctores y administradores se encuentra disponible en formato PDF en el directorio de documentación:
 
-> 📘 **[Descargar Manual de Usuario](https://www.google.com/search?q=./Docs/ManualUsuario.txt)**
+> 📘 **[Descargar Manual de Usuario](./Docs/ManualUsuario.txt)**
+
 
 ---
 
 ## 👥 Equipo de Desarrollo
 
-* **Bravo Leandro** - Arquitectura & Seguridad
-* **Enriquez Michael** - Gestión de Pacientes
-* **Jimenez Yasid** - Fichas Técnicas & Endodoncia
-* **Romero Erick** - Odontograma Interactivo
-* **Ochoa Aubertin** - Integración Frontend & UI/UX
+* **Bravo Leandro** - Odontograma Interactivo
+* **Enriquez Michael** -  Integración Frontend & UI/UX
+* **Jimenez Yasid** -  Arquitectura & Seguridad
+* **Romero Erick** -  Gestión de Pacientes
+* **Ochoa Aubertin** -  Fichas Técnicas & Endodoncia
 
 ---
 
