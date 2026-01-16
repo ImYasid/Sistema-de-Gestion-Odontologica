@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Base de Datos PostgreSQL
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: odontologia_db
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=odontologia_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Interfaz gráfica para ver la Base de Datos
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: odontologia_pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres-db
+
+volumes:
+  postgres_data:

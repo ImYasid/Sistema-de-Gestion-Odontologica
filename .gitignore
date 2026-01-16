@@ -1,0 +1,41 @@
+# --- Java / Maven ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# --- Spring Boot ---
+*.log
+.mvn/
+mvnw
+mvnw.cmd
+
+# --- IDEs (Eclipse / STS / IntelliJ / VS Code) ---
+.settings/
+.project
+.classpath
+.metadata/
+bin/
+.idea/
+*.iml
+*.iws
+.vscode/
+.factorypath
+
+# --- Node / React (Frontend) ---
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+.npm
+.eslintcache
+
+# --- Docker & System ---
+.DS_Store
+Thumbs.db
+.env
+.docker/
