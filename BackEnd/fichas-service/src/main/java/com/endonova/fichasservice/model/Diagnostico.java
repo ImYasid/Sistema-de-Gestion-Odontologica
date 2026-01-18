@@ -20,7 +20,6 @@ import lombok.Data;
  */
 @Entity
 @Table(name = "diagnosticos")
-@Data
 public class Diagnostico {
 
     @Id
@@ -101,7 +100,263 @@ public class Diagnostico {
     @Column(length = 20)
     private String movilidadGrado; // 0, 1, 2, 3
 
-    private Boolean supuracion;
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public FichaTecnica getFichaTecnica() {
+		return fichaTecnica;
+	}
+
+	public void setFichaTecnica(FichaTecnica fichaTecnica) {
+		this.fichaTecnica = fichaTecnica;
+	}
+
+	public String getPiezaDental() {
+		return piezaDental;
+	}
+
+	public void setPiezaDental(String piezaDental) {
+		this.piezaDental = piezaDental;
+	}
+
+	public String getCausas() {
+		return causas;
+	}
+
+	public void setCausas(String causas) {
+		this.causas = causas;
+	}
+
+	public String getDolorNaturaleza() {
+		return dolorNaturaleza;
+	}
+
+	public void setDolorNaturaleza(String dolorNaturaleza) {
+		this.dolorNaturaleza = dolorNaturaleza;
+	}
+
+	public String getDolorCalidad() {
+		return dolorCalidad;
+	}
+
+	public void setDolorCalidad(String dolorCalidad) {
+		this.dolorCalidad = dolorCalidad;
+	}
+
+	public String getDolorLocalizacion() {
+		return dolorLocalizacion;
+	}
+
+	public void setDolorLocalizacion(String dolorLocalizacion) {
+		this.dolorLocalizacion = dolorLocalizacion;
+	}
+
+	public String getDolorIrradiadoA() {
+		return dolorIrradiadoA;
+	}
+
+	public void setDolorIrradiadoA(String dolorIrradiadoA) {
+		this.dolorIrradiadoA = dolorIrradiadoA;
+	}
+
+	public String getDolorDuracion() {
+		return dolorDuracion;
+	}
+
+	public void setDolorDuracion(String dolorDuracion) {
+		this.dolorDuracion = dolorDuracion;
+	}
+
+	public String getDolorIniciadoPor() {
+		return dolorIniciadoPor;
+	}
+
+	public void setDolorIniciadoPor(String dolorIniciadoPor) {
+		this.dolorIniciadoPor = dolorIniciadoPor;
+	}
+
+	public String getInspeccionVisual() {
+		return inspeccionVisual;
+	}
+
+	public void setInspeccionVisual(String inspeccionVisual) {
+		this.inspeccionVisual = inspeccionVisual;
+	}
+
+	public String getPalpacion() {
+		return palpacion;
+	}
+
+	public void setPalpacion(String palpacion) {
+		this.palpacion = palpacion;
+	}
+
+	public String getPercusion() {
+		return percusion;
+	}
+
+	public void setPercusion(String percusion) {
+		this.percusion = percusion;
+	}
+
+	public String getMovilidad() {
+		return movilidad;
+	}
+
+	public void setMovilidad(String movilidad) {
+		this.movilidad = movilidad;
+	}
+
+	public String getCambioColoracion() {
+		return cambioColoracion;
+	}
+
+	public void setCambioColoracion(String cambioColoracion) {
+		this.cambioColoracion = cambioColoracion;
+	}
+
+	public String getPruebaTermicaFrio() {
+		return pruebaTermicaFrio;
+	}
+
+	public void setPruebaTermicaFrio(String pruebaTermicaFrio) {
+		this.pruebaTermicaFrio = pruebaTermicaFrio;
+	}
+
+	public String getPruebaTermicaCalor() {
+		return pruebaTermicaCalor;
+	}
+
+	public void setPruebaTermicaCalor(String pruebaTermicaCalor) {
+		this.pruebaTermicaCalor = pruebaTermicaCalor;
+	}
+
+	public String getPruebaElectrica() {
+		return pruebaElectrica;
+	}
+
+	public void setPruebaElectrica(String pruebaElectrica) {
+		this.pruebaElectrica = pruebaElectrica;
+	}
+
+	public String getZonaPeriapical() {
+		return zonaPeriapical;
+	}
+
+	public void setZonaPeriapical(String zonaPeriapical) {
+		this.zonaPeriapical = zonaPeriapical;
+	}
+
+	public Boolean getDolorPalpacion() {
+		return dolorPalpacion;
+	}
+
+	public void setDolorPalpacion(Boolean dolorPalpacion) {
+		this.dolorPalpacion = dolorPalpacion;
+	}
+
+	public Boolean getFistula() {
+		return fistula;
+	}
+
+	public void setFistula(Boolean fistula) {
+		this.fistula = fistula;
+	}
+
+	public Boolean getFlemon() {
+		return flemon;
+	}
+
+	public void setFlemon(Boolean flemon) {
+		this.flemon = flemon;
+	}
+
+	public String getProfundidadBolsa() {
+		return profundidadBolsa;
+	}
+
+	public void setProfundidadBolsa(String profundidadBolsa) {
+		this.profundidadBolsa = profundidadBolsa;
+	}
+
+	public String getMovilidadGrado() {
+		return movilidadGrado;
+	}
+
+	public void setMovilidadGrado(String movilidadGrado) {
+		this.movilidadGrado = movilidadGrado;
+	}
+
+	public Boolean getSupuracion() {
+		return supuracion;
+	}
+
+	public void setSupuracion(Boolean supuracion) {
+		this.supuracion = supuracion;
+	}
+
+	public String getCamaraRadiografica() {
+		return camaraRadiografica;
+	}
+
+	public void setCamaraRadiografica(String camaraRadiografica) {
+		this.camaraRadiografica = camaraRadiografica;
+	}
+
+	public String getConductosRadiografia() {
+		return conductosRadiografia;
+	}
+
+	public void setConductosRadiografia(String conductosRadiografia) {
+		this.conductosRadiografia = conductosRadiografia;
+	}
+
+	public String getHallazgosRadiograficos() {
+		return hallazgosRadiograficos;
+	}
+
+	public void setHallazgosRadiograficos(String hallazgosRadiograficos) {
+		this.hallazgosRadiograficos = hallazgosRadiograficos;
+	}
+
+	public String getCausasFracasoTratamientoAnterior() {
+		return causasFracasoTratamientoAnterior;
+	}
+
+	public void setCausasFracasoTratamientoAnterior(String causasFracasoTratamientoAnterior) {
+		this.causasFracasoTratamientoAnterior = causasFracasoTratamientoAnterior;
+	}
+
+	public String getDiagnosticoPulpar() {
+		return diagnosticoPulpar;
+	}
+
+	public void setDiagnosticoPulpar(String diagnosticoPulpar) {
+		this.diagnosticoPulpar = diagnosticoPulpar;
+	}
+
+	public String getDiagnosticoPeriapical() {
+		return diagnosticoPeriapical;
+	}
+
+	public void setDiagnosticoPeriapical(String diagnosticoPeriapical) {
+		this.diagnosticoPeriapical = diagnosticoPeriapical;
+	}
+
+	public String getPlanTratamiento() {
+		return planTratamiento;
+	}
+
+	public void setPlanTratamiento(String planTratamiento) {
+		this.planTratamiento = planTratamiento;
+	}
+
+	private Boolean supuracion;
 
     // ========== EVALUACIÓN RADIOGRÁFICA ==========
     @Column(length = 200)

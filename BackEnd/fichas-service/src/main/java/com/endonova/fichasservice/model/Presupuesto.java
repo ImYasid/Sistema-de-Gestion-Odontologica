@@ -5,12 +5,12 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 /**
- * PRESUPUESTO - Según ficha PDF ENDONOVA
- * Costos del tratamiento
+ * PRESUPUESTO - Corregido por el Arquitecto Yasid
  */
 @Entity
 @Table(name = "presupuestos")
-@Data
+
+
 public class Presupuesto {
 
     @Id
@@ -21,26 +21,96 @@ public class Presupuesto {
     @JoinColumn(name = "ficha_tecnica_id", nullable = false)
     private FichaTecnica fichaTecnica;
 
-    // N ACTOS (Número de sesiones/actos)
     private Integer numeroActos;
 
-    // ACTIVIDAD (Descripción del tratamiento)
     @Column(length = 500)
     private String actividad;
 
-    // COSTO DE TRATAMIENTO (COST UNITARIO)
-    @Column(precision = 10, scale = 2)
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public FichaTecnica getFichaTecnica() {
+		return fichaTecnica;
+	}
+
+	public void setFichaTecnica(FichaTecnica fichaTecnica) {
+		this.fichaTecnica = fichaTecnica;
+	}
+
+	public Integer getNumeroActos() {
+		return numeroActos;
+	}
+
+	public void setNumeroActos(Integer numeroActos) {
+		this.numeroActos = numeroActos;
+	}
+
+	public String getActividad() {
+		return actividad;
+	}
+
+	public void setActividad(String actividad) {
+		this.actividad = actividad;
+	}
+
+	public BigDecimal getCostoTratamiento() {
+		return costoTratamiento;
+	}
+
+	public void setCostoTratamiento(BigDecimal costoTratamiento) {
+		this.costoTratamiento = costoTratamiento;
+	}
+
+	public BigDecimal getCostoMaterial() {
+		return costoMaterial;
+	}
+
+	public void setCostoMaterial(BigDecimal costoMaterial) {
+		this.costoMaterial = costoMaterial;
+	}
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
+	public EstadoPresupuesto getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoPresupuesto estado) {
+		this.estado = estado;
+	}
+
+	@Column(precision = 10, scale = 2)
     private BigDecimal costoTratamiento;
 
-    // MATERIAL
     @Column(precision = 10, scale = 2)
     private BigDecimal costoMaterial;
 
-    // TOTAL (calculado automáticamente)
     @Column(precision = 10, scale = 2)
     private BigDecimal total;
 
-    // Método para calcular el total automáticamente
+    // --- LA PARTE NUEVA QUE FALTABA ---
+    @Enumerated(EnumType.STRING)
+    private EstadoPresupuesto estado;
+
+    public enum EstadoPresupuesto {
+        PENDIENTE,
+        APROBADO,
+        RECHAZADO,
+        PAGADO
+    }
+    // ----------------------------------
+
     @PrePersist
     @PreUpdate
     public void calcularTotal() {

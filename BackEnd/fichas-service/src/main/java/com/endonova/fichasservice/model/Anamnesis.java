@@ -1,62 +1,138 @@
 package com.endonova.fichasservice.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
 
-/**
- * ANAMNESIS - Según ficha PDF ENDONOVA
- * Historia Clínica del Paciente
- */
 @Entity
 @Table(name = "anamnesis")
-@Data
 public class Anamnesis {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Relación con la Ficha Técnica (Una ficha tiene una anamnesis)
     @OneToOne
-    @JoinColumn(name = "ficha_tecnica_id", nullable = false)
+    @JoinColumn(name = "ficha_tecnica_id")
     private FichaTecnica fichaTecnica;
 
-    // DR. REFERIDOR
-    @Column(length = 200)
+    // --- LOS CAMPOS QUE FALTABAN Y CAUSABAN EL ERROR ---
+
     private String drReferidor;
 
-    // MOTIVO DE CONSULTA
-    @Column(length = 1000, nullable = false)
+    @Column(length = 1000)
     private String motivoConsulta;
 
-    // ANTECEDENTES DE LA ENFERMEDAD ACTUAL
-    @Column(length = 1000)
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public FichaTecnica getFichaTecnica() {
+		return fichaTecnica;
+	}
+
+	public void setFichaTecnica(FichaTecnica fichaTecnica) {
+		this.fichaTecnica = fichaTecnica;
+	}
+
+	public String getDrReferidor() {
+		return drReferidor;
+	}
+
+	public void setDrReferidor(String drReferidor) {
+		this.drReferidor = drReferidor;
+	}
+
+	public String getMotivoConsulta() {
+		return motivoConsulta;
+	}
+
+	public void setMotivoConsulta(String motivoConsulta) {
+		this.motivoConsulta = motivoConsulta;
+	}
+
+	public String getAntecedentesEnfermedadActual() {
+		return antecedentesEnfermedadActual;
+	}
+
+	public void setAntecedentesEnfermedadActual(String antecedentesEnfermedadActual) {
+		this.antecedentesEnfermedadActual = antecedentesEnfermedadActual;
+	}
+
+	public Boolean getEnfermedadSistematica() {
+		return enfermedadSistematica;
+	}
+
+	public void setEnfermedadSistematica(Boolean enfermedadSistematica) {
+		this.enfermedadSistematica = enfermedadSistematica;
+	}
+
+	public String getCualEnfermedad() {
+		return cualEnfermedad;
+	}
+
+	public void setCualEnfermedad(String cualEnfermedad) {
+		this.cualEnfermedad = cualEnfermedad;
+	}
+
+	public Boolean getAlergias() {
+		return alergias;
+	}
+
+	public void setAlergias(Boolean alergias) {
+		this.alergias = alergias;
+	}
+
+	public String getCualAlergia() {
+		return cualAlergia;
+	}
+
+	public void setCualAlergia(String cualAlergia) {
+		this.cualAlergia = cualAlergia;
+	}
+
+	public Boolean getTomaMedicamento() {
+		return tomaMedicamento;
+	}
+
+	public void setTomaMedicamento(Boolean tomaMedicamento) {
+		this.tomaMedicamento = tomaMedicamento;
+	}
+
+	public String getCualMedicamento() {
+		return cualMedicamento;
+	}
+
+	public void setCualMedicamento(String cualMedicamento) {
+		this.cualMedicamento = cualMedicamento;
+	}
+
+	public Boolean getEmbarazada() {
+		return embarazada;
+	}
+
+	public void setEmbarazada(Boolean embarazada) {
+		this.embarazada = embarazada;
+	}
+
+	@Column(length = 1000)
     private String antecedentesEnfermedadActual;
 
-    // ¿SUFRE ALGUNA ENFERMEDAD SISTEMÁTICA?
+    // ¿Sufre enfermedad sistemática? (Sí/No)
     private Boolean enfermedadSistematica;
-    
-    @Column(length = 500)
     private String cualEnfermedad;
 
-    // ¿TIENE ALGUNA ALERGIA?
+    // ¿Tiene alergias?
     private Boolean alergias;
-    
-    @Column(length = 500)
     private String cualAlergia;
 
-    // ¿ESTÁ TOMANDO ALGÚN MEDICAMENTO?
+    // ¿Toma medicamentos?
     private Boolean tomaMedicamento;
-    
-    @Column(length = 500)
     private String cualMedicamento;
 
-    // ¿ESTÁ EMBARAZADA?
+    // ¿Está embarazada?
     private Boolean embarazada;
 }
