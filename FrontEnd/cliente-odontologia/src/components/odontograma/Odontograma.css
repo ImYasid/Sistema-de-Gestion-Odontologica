@@ -1,0 +1,150 @@
+.odontograma-container {
+    display: flex;
+    background: #fdfdfd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    font-family: 'Segoe UI', sans-serif;
+    gap: 20px;
+}
+
+/* Panel Izquierdo */
+.panel-operaciones {
+    width: 150px;
+    background: #f4f6f7;
+    padding: 15px;
+    border-radius: 8px;
+    border-right: 2px solid #e0e0e0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #555;
+}
+
+.color-box { width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; }
+.rojo { background: #e74c3c; }
+.azul { background: #3498db; }
+.amarillo { background: #f1c40f; }
+
+/* Panel Principal (Boca) */
+.panel-boca {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cuadrante-row {
+    display: flex;
+    gap: 8px; 
+}
+
+.separador-central-boca {
+    width: 2px;
+    background: #ccc;
+    margin: 0 15px;
+    align-self: stretch;
+}
+
+.columna-dental {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45px;
+}
+
+.bloque-diente {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    position: relative;
+}
+
+.bloque-diente.inferior {
+    justify-content: flex-start; 
+}
+
+.diente-geometrico-svg {
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.1));
+}
+.diente-geometrico-svg:hover {
+    transform: scale(1.1);
+}
+
+.zona-numeros {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    color: #7f8c8d;
+    font-size: 11px;
+    margin: 8px 0;
+    background: #f0f3f4;
+    padding: 4px 0;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.linea-divisoria {
+    width: 80%;
+    height: 1px;
+    background: #ccc;
+    margin: 2px 0;
+}
+
+.badge-ficha {
+    font-size: 9px;
+    background: #3498db;
+    color: white;
+    padding: 1px 4px;
+    border-radius: 3px;
+    cursor: pointer;
+    position: absolute;
+    top: 0; 
+    right: -10px;
+    z-index: 10;
+} 
+.inferior .badge-ficha { top: auto; bottom: 0; }
+
+.btn-reset {
+    width: 100%;
+    padding: 10px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+.btn-reset:hover {
+    background-color: #c0392b;
+}
+
+/* Estilo base de cada cara */
+.cara-interactiva {
+  stroke: #bdc3c7;
+  stroke-width: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cara-interactiva:hover {
+  filter: brightness(0.85);
+  stroke: #848383;             
+  stroke-width: 3px;        
+  z-index: 10;              
+}
+
+/* Ajuste del contenedor SVG */
+.diente-geometrico-svg {
+  overflow: visible;
+  margin: 2px;
+}
