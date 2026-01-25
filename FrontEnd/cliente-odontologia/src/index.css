@@ -11,3 +11,203 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Button styles used across the app */
+.btn {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #d0d0d0;
+  background: white;
+  color: #222;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-size: 13px;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.btn-primary {
+  background: #1976d2;
+  color: white;
+  border-color: #1565c0;
+}
+
+.btn-primary:hover {
+  background: #1565c0;
+}
+
+/* Success (green) button */
+.btn-success {
+  background: #2e7d32;
+  color: white;
+  border-color: #1b5e20;
+}
+
+.btn-success:hover {
+  background: #27672b;
+}
+
+/* Odontograma specific variant for spacing */
+.btn-odontograma { display: inline-block; padding: 8px 14px; }
+
+/* Navbar brand */
+.navbar-brand {
+  font-weight: 700;
+  font-size: 18px;
+  color: #1565c0;
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.navbar-brand:hover { text-decoration: underline; }
+
+.btn-logout { margin-left: 8px; }
+
+.btn-save {
+  background: #2e7d32;
+  color: white;
+  border-color: #2e7d32;
+}
+
+.btn-save:hover {
+  background: #27672b;
+}
+
+.btn-edit {
+  background: #ffb300;
+  color: #1b1b1b;
+  border-color: #ffb300;
+}
+
+.btn-edit:hover {
+  background: #ffa000;
+}
+
+.btn-delete {
+  background: white;
+  color: #c62828;
+  border-color: #f5c6cb;
+}
+
+.btn-delete:hover {
+  background: #c62828;
+  color: white;
+  border-color: #b71c1c;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn:focus {
+  outline: 3px solid rgba(25, 118, 210, 0.15);
+}
+
+/* Small adjustments for textarea display in diagnostics */
+.diagnostico-preview {
+  white-space: pre-wrap;
+  background: #fbfbfb;
+  border: 1px solid #eee;
+  padding: 8px;
+  border-radius: 4px;
+  min-height: 48px;
+}
+
+.anamnesis-preview {
+  background: #fbfbfb;
+  border: 1px solid #eee;
+  padding: 8px;
+  border-radius: 4px;
+  line-height: 1.45;
+}
+
+
+/* Table styles for lists */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* Dashboard styles */
+.dashboard-container { padding: 24px; }
+.hero {
+  display: flex; justify-content: space-between; gap: 20px; align-items: center;
+  background: linear-gradient(90deg, #eef7ff 0%, #ffffff 100%);
+  padding: 20px; border-radius: 10px; box-shadow: 0 6px 20px rgba(20,50,100,0.04);
+}
+.hero-text h1 { margin: 0 0 8px 0; font-size: 28px; }
+.hero-text p { margin: 0 0 12px 0; color: #495057; }
+.quick-actions { margin-top: 8px; }
+.hero-graphic { display:flex; gap:12px; }
+.stat-card { background: white; padding: 12px 18px; border-radius: 8px; text-align:center; min-width:110px; box-shadow: 0 3px 10px rgba(0,0,0,0.03); }
+.stat-card .stat-value { font-size: 22px; font-weight:700; }
+.stat-card .stat-label { font-size: 12px; color: #666; }
+.stat-warning { border-left: 4px solid #f1c40f; }
+
+.recent-section { margin-top: 18px; }
+.recent-list { list-style:none; padding:0; margin:0; display:flex; gap:10px; }
+.recent-item { background: white; padding:12px; border-radius:8px; min-width: 220px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); display:flex; justify-content:space-between; align-items:center; }
+.recent-item .muted { font-size:12px; color:#777; margin-top:4px; }
+
+.table thead th {
+  background: #f4f6f8;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 13px;
+  color: #333;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.table tbody tr {
+  transition: background 0.15s;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #fbfbfb;
+}
+
+.table tbody tr:hover {
+  background: #f0f7ff;
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.table .actions { display:flex; gap:8px; }
+
+/* Ficha card styles */
+.ficha-card {
+  background: white;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  border: 1px solid #eee;
+}
+
+.ficha-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ficha-meta {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+

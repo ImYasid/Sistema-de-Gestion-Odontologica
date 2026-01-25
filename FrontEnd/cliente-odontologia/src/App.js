@@ -17,10 +17,6 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <header style={{ backgroundColor: '#282c34', padding: '20px', color: 'white', marginBottom: '8px' }}>
-          <h1>Sistema Gestión Odontológica</h1>
-        </header>
-
         <Navbar />
 
         <Routes>
@@ -29,7 +25,7 @@ function App() {
           <Route path="/pacientes" element={<Protected><Pacientes /></Protected>} />
           <Route path="/fichas" element={<Protected><Fichas /></Protected>} />
           <Route path="/odontograma" element={<Protected><OdontogramaPage /></Protected>} />
-          <Route path="/" element={<Navigate to="/odontograma" replace />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </div>
     </BrowserRouter>

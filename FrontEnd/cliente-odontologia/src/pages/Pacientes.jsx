@@ -46,24 +46,28 @@ const Pacientes = () => {
       <div style={{display: 'flex', gap: 20}}>
         <div style={{flex: 1}}>
           <h3>Lista</h3>
-          <table style={{width: '100%', borderCollapse: 'collapse'}}>
+          <table className="table table-pacientes">
             <thead>
               <tr>
                 <th>Nombre</th>
                 <th>Cédula</th>
                 <th>Teléfono</th>
-                <th>Acciones</th>
+                <th>Email</th>
+                <th style={{width:195}}>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {pacientes.map(p => (
-                <tr key={p.id} style={{borderTop: '1px solid #eee'}}>
+                <tr key={p.id}>
                   <td>{p.nombre} {p.apellido}</td>
                   <td>{p.cedula}</td>
                   <td>{p.telefono}</td>
+                  <td>{p.email}</td>
                   <td>
-                    <button onClick={() => navigate(`/fichas?paciente=${p.id}`)}>Ver Fichas</button>
-                    <button onClick={() => navigate(`/odontograma?paciente=${p.id}`)} style={{marginLeft:8}}>Odontograma</button>
+                    <div style={{display:'flex', gap:3}}>
+                      <button className="btn btn-primary" onClick={() => navigate(`/fichas?paciente=${p.id}`)}>Ver Fichas</button>
+                      <button className="btn" onClick={() => navigate(`/odontograma?paciente=${p.id}`)}>Odontograma</button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -89,7 +93,7 @@ const Pacientes = () => {
             <div style={{marginBottom:8}}>
               <input placeholder="Email" type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} />
             </div>
-            <button type="submit" disabled={loading}>{loading ? 'Creando...' : 'Crear y abrir Odontograma'}</button>
+            <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Creando...' : 'Crear y abrir Odontograma'}</button>
           </form>
         </div>
       </div>

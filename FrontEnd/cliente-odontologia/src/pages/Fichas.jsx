@@ -55,6 +55,10 @@ const Fichas = () => {
       }));
 
       setFichas(listaConDetalles);
+      // Expand todas las fichas por defecto para que los datos no queden colapsados
+      const expandedMap = {};
+      listaConDetalles.forEach(f => { expandedMap[f.id] = true; });
+      setExpanded(expandedMap);
     } catch (err) { console.error('Error fetching fichas', err); }
   };
 
@@ -162,15 +166,15 @@ const Fichas = () => {
       {pacienteId && (
         <div>
           <div style={{marginBottom:12}}>
-            <button onClick={handleCreate} disabled={creating}>{creating ? 'Creando...' : 'Crear nueva ficha'}</button>
-            <button onClick={fetchFichas} style={{marginLeft:8}}>Recargar</button>
+            <button className="btn btn-primary" onClick={handleCreate} disabled={creating}>{creating ? 'Creando...' : 'Crear nueva ficha'}</button>
+            <button className="btn" onClick={fetchFichas} style={{marginLeft:8}}>Recargar</button>
 
             {dienteParam && !processedDiente && (
               <div style={{marginTop:8, padding:10, border:'1px dashed #ccc'}}>
                 <div>Se detectó diente <strong>{dienteParam}</strong> en la URL.</div>
                 <div style={{marginTop:6}}>
-                  <button onClick={handleCreateForDiente} disabled={creating}>{creating ? 'Procesando...' : `Crear ficha y diagnóstico para diente ${dienteParam}`}</button>
-                  <button style={{marginLeft:8}} onClick={() => setProcessedDiente(true)}>Ignorar</button>
+                  <button className="btn btn-primary" onClick={handleCreateForDiente} disabled={creating}>{creating ? 'Procesando...' : `Crear ficha y diagnóstico para diente ${dienteParam}`}</button>
+                  <button className="btn" style={{marginLeft:8}} onClick={() => setProcessedDiente(true)}>Ignorar</button>
                 </div>
               </div>
             )}
@@ -179,15 +183,15 @@ const Fichas = () => {
           {fichas.length === 0 && <p>No se encontraron fichas para este paciente.</p>}
 
           {fichas.map(f => (
-            <div key={f.id} style={{border:'1px solid #eee', padding:12, marginBottom:10}}>
-              <div style={{display:'flex', justifyContent:'space-between'}}>
+            <div key={f.id} className="ficha-card">
+              <div className="ficha-header">
                 <div>
                   <strong>{f.numeroHistoriaClinica}</strong>
-                  <div style={{fontSize:12, color:'#666'}}>Estado: {f.estado} — Creada: {f.fechaCreacion ? new Date(f.fechaCreacion).toLocaleString() : ''}</div>
+                  <div className="ficha-meta">Estado: {f.estado} — Creada: {f.fechaCreacion ? new Date(f.fechaCreacion).toLocaleString() : ''}</div>
                 </div>
                 <div>
-                  <button onClick={() => toggle(f.id)}>{expanded[f.id] ? 'Ocultar' : 'Mostrar detalles'}</button>
-                  <button style={{marginLeft:8}} onClick={() => handleDeleteFicha(f.id)}>Eliminar ficha</button>
+                  <button className="btn" onClick={() => toggle(f.id)}>{expanded[f.id] ? 'Ocultar' : 'Mostrar detalles'}</button>
+                  <button className="btn btn-delete" style={{marginLeft:8}} onClick={() => handleDeleteFicha(f.id)}>Eliminar ficha</button>
                 </div>
               </div>
 
@@ -203,7 +207,7 @@ const Fichas = () => {
                         <div>Enfermedad sistemática: {String(f.anamnesis.enfermedadSistematica)}</div>
                         <div>Alergias: {String(f.anamnesis.alergias)} {f.anamnesis.cualAlergia ? `(${f.anamnesis.cualAlergia})` : ''}</div>
                         <div style={{marginTop:8}}>
-                          <button onClick={()=> setEditingAnamnesis(prev=>({...prev,[f.id]:true}))}>Editar Anamnesis</button>
+                          <button className="btn btn-edit" onClick={()=> setEditingAnamnesis(prev=>({...prev,[f.id]:true}))}>Editar Anamnesis</button>
                         </div>
                       </div>
                     ) : (
@@ -212,7 +216,7 @@ const Fichas = () => {
                   ) : (
                     <div>
                       <div>No hay anamnesis registrada.</div>
-                      <button onClick={async () => {
+                      <button className="btn" onClick={async () => {
                         try {
                           const payload = { fichaTecnica: { id: f.id }, motivoConsulta: 'Anamnesis inicial' };
                           await API.post('/anamnesis', payload);
@@ -231,10 +235,10 @@ const Fichas = () => {
                           {!editingDiagnosticos[d.id] ? (
                             <div>
                               <div><strong>Pieza:</strong> {d.piezaDental}</div>
-                              <div><strong>Diagnóstico pulpar:</strong><div style={{whiteSpace:'pre-wrap', background:'#f8f8f8', padding:6, marginTop:4}}>{d.diagnosticoPulpar}</div></div>
+                              <div><strong>Diagnóstico pulpar:</strong><div className="diagnostico-preview">{d.diagnosticoPulpar}</div></div>
                               <div><strong>Plan:</strong> {d.planTratamiento}</div>
                               <div style={{marginTop:8}}>
-                                <button onClick={()=> setEditingDiagnosticos(prev=>({...prev,[d.id]:true}))}>Editar diagnóstico</button>
+                                <button className="btn btn-edit" onClick={()=> setEditingDiagnosticos(prev=>({...prev,[d.id]:true}))}>Editar diagnóstico</button>
                               </div>
                             </div>
                           ) : (
@@ -304,7 +308,7 @@ const AnamnesisEditor = ({ ficha, onSaved }) => {
         <input placeholder="Cual" value={form.cualAlergia || ''} onChange={e=>setForm({...form,cualAlergia:e.target.value})} />
       </div>
       <div style={{marginTop:8}}>
-        <button onClick={handleSave} disabled={saving}>{saving ? 'Guardando...' : 'Guardar Anamnesis'}</button>
+        <button className="btn btn-save" onClick={handleSave} disabled={saving}>{saving ? 'Guardando...' : 'Guardar Anamnesis'}</button>
       </div>
     </div>
   );
@@ -339,7 +343,7 @@ const DiagnosticoEditor = ({ diag, fichaId, onSaved }) => {
         <textarea value={form.planTratamiento || ''} onChange={e=>setForm({...form,planTratamiento:e.target.value})} />
       </div>
       <div style={{marginTop:8}}>
-        <button onClick={handleSave} disabled={saving}>{saving ? 'Guardando...' : 'Guardar Diagnóstico'}</button>
+        <button className="btn btn-save" onClick={handleSave} disabled={saving}>{saving ? 'Guardando...' : 'Guardar Diagnóstico'}</button>
       </div>
     </div>
   );
