@@ -15,6 +15,10 @@ const Fichas = () => {
   const dienteParam = searchParams.get('diente');
   const [processedDiente, setProcessedDiente] = useState(false);
 
+  // UI editing state: controlan si el editor está visible para cada ficha/diagnóstico
+  const [editingAnamnesis, setEditingAnamnesis] = useState({});
+  const [editingDiagnosticos, setEditingDiagnosticos] = useState({});
+
   const fetchPaciente = async () => {
     if (!pacienteId) return;
     try {
@@ -56,42 +60,67 @@ const Fichas = () => {
 
   useEffect(() => { fetchPaciente(); fetchFichas(); }, [pacienteId]);
 
-  // Si venimos con ?diente=NN, ofrecemos crear ficha + diagnostico rápidamente
-  useEffect(() => {
-    if (!pacienteId || !dienteParam || processedDiente) return;
+  // Si venimos con ?diente=NN, mostramos una acción directa para crear ficha+diagnóstico
+  // (No la creamos automáticamente para evitar duplicados; el usuario debe confirmar)
+  const handleCreateForDiente = async () => {
+    if (!pacienteId || !dienteParam) return;
+    try {
+      setCreating(true);
+      // 1) crear ficha
+      const payload = { pacienteId: Number(pacienteId), numeroHistoriaClinica: `HC-${Date.now()}` };
+      const resp = await API.post('/fichas', payload);
+      const nuevaFicha = resp.data;
 
-    // Marcamos como procesado inmediatamente para evitar ejecuciones dobles
-    // (React.StrictMode puede ejecutar efectos dos veces en desarrollo)
-    setProcessedDiente(true);
+      // 2) intentar obtener información del diente desde el odontograma para incluir en la anamnesis
+      try {
+        const API_OD = axios.create({ baseURL: 'http://localhost:8084' });
+        const odResp = await API_OD.get(`/api/odontograma/${pacienteId}`);
+        const dientes = odResp.data || [];
+        const diente = dientes.find(d => String(d.numeroDiente) === String(dienteParam));
 
-    if (window.confirm(`Crear ficha y diagnóstico inicial para el diente ${dienteParam}?`)) {
-      (async () => {
-        try {
-          setCreating(true);
-          // 1) crear ficha
-          const payload = { pacienteId: Number(pacienteId), numeroHistoriaClinica: `HC-${Date.now()}` };
-          const resp = await API.post('/fichas', payload);
-          const nuevaFicha = resp.data;
-          // 2) crear diagnostico asociado a la ficha
-          const diag = {
-            fichaTecnica: { id: nuevaFicha.id },
-            piezaDental: String(dienteParam),
-            diagnosticoPulpar: 'Pendiente - Generado desde Odontograma',
-            planTratamiento: 'Evaluar necesidad de endodoncia'
-          };
-          await API.post('/diagnosticos', diag);
-          // 3) recargar
-          await fetchFichas();
-          alert('Ficha y diagnóstico creados.');
-        } catch (e) {
-          console.error('Error creando ficha+diagnostico', e);
-          alert('Error al crear ficha y diagnóstico');
-        } finally {
-          setCreating(false);
+        let observacionText = '';
+        if (diente && diente.observacion) {
+          try {
+            const caras = typeof diente.observacion === 'string' ? JSON.parse(diente.observacion) : diente.observacion;
+            const listado = Object.entries(caras)
+              .filter(([k, v]) => v !== null && v !== undefined && v !== '')
+              .map(([k, v]) => `${k}:${v}`);
+            observacionText = listado.length > 0 ? listado.join(', ') : '';
+          } catch (e) {
+            observacionText = String(diente.observacion || '');
+          }
         }
-      })();
+
+        // 3) crear anamnesis con la info del odontograma (si aplica)
+        const anam = {
+          fichaTecnica: { id: nuevaFicha.id },
+          motivoConsulta: `Diente ${dienteParam} - Observaciones odontograma: ${observacionText}`
+        };
+        await API.post('/anamnesis', anam);
+      } catch (e) {
+        console.error('No se pudo leer el odontograma para obtener observaciones del diente:', e);
+      }
+
+      // 4) crear diagnostico asociado a la ficha
+      const diag = {
+        fichaTecnica: { id: nuevaFicha.id },
+        piezaDental: String(dienteParam),
+        diagnosticoPulpar: 'Pendiente - Generado desde Odontograma',
+        planTratamiento: 'Evaluar necesidad de endodoncia'
+      };
+      await API.post('/diagnosticos', diag);
+
+      // 5) recargar
+      await fetchFichas();
+      alert('Ficha y diagnóstico creados para el diente ' + dienteParam + '.');
+    } catch (e) {
+      console.error('Error creando ficha+diagnostico', e);
+      alert('Error al crear ficha y diagnóstico');
+    } finally {
+      setCreating(false);
+      setProcessedDiente(true);
     }
-  }, [pacienteId, dienteParam, processedDiente]);
+  };
 
   const handleCreate = async () => {
     if (!pacienteId) return alert('Selecciona un paciente');
@@ -106,6 +135,15 @@ const Fichas = () => {
   };
 
   const toggle = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
+
+  const handleDeleteFicha = async (id) => {
+    if (!window.confirm('¿Eliminar esta ficha? Esta operación no se puede deshacer.')) return;
+    try {
+      await API.delete(`/fichas/${id}`);
+      await fetchFichas();
+      alert('Ficha eliminada.');
+    } catch (e) { console.error('Error eliminando ficha', e); alert('Error al eliminar ficha'); }
+  }; 
 
   return (
     <div style={{padding: 20}}>
@@ -126,6 +164,16 @@ const Fichas = () => {
           <div style={{marginBottom:12}}>
             <button onClick={handleCreate} disabled={creating}>{creating ? 'Creando...' : 'Crear nueva ficha'}</button>
             <button onClick={fetchFichas} style={{marginLeft:8}}>Recargar</button>
+
+            {dienteParam && !processedDiente && (
+              <div style={{marginTop:8, padding:10, border:'1px dashed #ccc'}}>
+                <div>Se detectó diente <strong>{dienteParam}</strong> en la URL.</div>
+                <div style={{marginTop:6}}>
+                  <button onClick={handleCreateForDiente} disabled={creating}>{creating ? 'Procesando...' : `Crear ficha y diagnóstico para diente ${dienteParam}`}</button>
+                  <button style={{marginLeft:8}} onClick={() => setProcessedDiente(true)}>Ignorar</button>
+                </div>
+              </div>
+            )}
           </div>
 
           {fichas.length === 0 && <p>No se encontraron fichas para este paciente.</p>}
@@ -139,6 +187,7 @@ const Fichas = () => {
                 </div>
                 <div>
                   <button onClick={() => toggle(f.id)}>{expanded[f.id] ? 'Ocultar' : 'Mostrar detalles'}</button>
+                  <button style={{marginLeft:8}} onClick={() => handleDeleteFicha(f.id)}>Eliminar ficha</button>
                 </div>
               </div>
 
@@ -146,20 +195,52 @@ const Fichas = () => {
                 <div style={{marginTop:10}}>
                   <h4>Anamnesis</h4>
                   {f.anamnesis ? (
+                    !editingAnamnesis[f.id] ? (
+                      <div>
+                        <div>Dr. referidor: {f.anamnesis.drReferidor}</div>
+                        <div>Motivo: {f.anamnesis.motivoConsulta}</div>
+                        <div>Antecedentes: {f.anamnesis.antecedentesEnfermedadActual}</div>
+                        <div>Enfermedad sistemática: {String(f.anamnesis.enfermedadSistematica)}</div>
+                        <div>Alergias: {String(f.anamnesis.alergias)} {f.anamnesis.cualAlergia ? `(${f.anamnesis.cualAlergia})` : ''}</div>
+                        <div style={{marginTop:8}}>
+                          <button onClick={()=> setEditingAnamnesis(prev=>({...prev,[f.id]:true}))}>Editar Anamnesis</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <AnamnesisEditor ficha={f} onSaved={async () => { setEditingAnamnesis(prev=>({...prev,[f.id]:false})); await fetchFichas(); }} />
+                    )
+                  ) : (
                     <div>
-                      <div>Dr. referidor: {f.anamnesis.drReferidor}</div>
-                      <div>Motivo: {f.anamnesis.motivoConsulta}</div>
-                      <div>Antecedentes: {f.anamnesis.antecedentesEnfermedadActual}</div>
-                      <div>Enfermedad sistemática: {String(f.anamnesis.enfermedadSistematica)}</div>
-                      <div>Alergias: {String(f.anamnesis.alergias)} {f.anamnesis.cualAlergia ? `(${f.anamnesis.cualAlergia})` : ''}</div>
+                      <div>No hay anamnesis registrada.</div>
+                      <button onClick={async () => {
+                        try {
+                          const payload = { fichaTecnica: { id: f.id }, motivoConsulta: 'Anamnesis inicial' };
+                          await API.post('/anamnesis', payload);
+                          await fetchFichas();
+                          alert('Anamnesis creada.');
+                        } catch (e) { console.error(e); alert('Error creando anamnesis'); }
+                      }}>Crear anamnesis</button>
                     </div>
-                  ) : (<div>No hay anamnesis registrada.</div>)}
+                  )} 
 
                   <h4>Diagnósticos</h4>
                   {f.diagnosticos && f.diagnosticos.length > 0 ? (
                     <ul>
                       {f.diagnosticos.map(d => (
-                        <li key={d.id}><strong>Pieza:</strong> {d.piezaDental} — <strong>Diagnóstico pulpar:</strong> {d.diagnosticoPulpar} — <strong>Plan:</strong> {d.planTratamiento}</li>
+                        <li key={d.id} style={{marginBottom:12}}>
+                          {!editingDiagnosticos[d.id] ? (
+                            <div>
+                              <div><strong>Pieza:</strong> {d.piezaDental}</div>
+                              <div><strong>Diagnóstico pulpar:</strong><div style={{whiteSpace:'pre-wrap', background:'#f8f8f8', padding:6, marginTop:4}}>{d.diagnosticoPulpar}</div></div>
+                              <div><strong>Plan:</strong> {d.planTratamiento}</div>
+                              <div style={{marginTop:8}}>
+                                <button onClick={()=> setEditingDiagnosticos(prev=>({...prev,[d.id]:true}))}>Editar diagnóstico</button>
+                              </div>
+                            </div>
+                          ) : (
+                            <DiagnosticoEditor diag={d} fichaId={f.id} onSaved={async () => { setEditingDiagnosticos(prev=>({...prev,[d.id]:false})); await fetchFichas(); }} />
+                          )}
+                        </li>
                       ))}
                     </ul>
                   ) : (<div>No hay diagnósticos registrados.</div>)}
@@ -178,6 +259,88 @@ const Fichas = () => {
           ))}
         </div>
       )}
+    </div>
+  );
+};
+
+
+
+// --- Helper components ---
+
+const AnamnesisEditor = ({ ficha, onSaved }) => {
+  const [form, setForm] = useState({ ...(ficha.anamnesis || {}) });
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      if (form.id) {
+        await API.put(`/anamnesis/${form.id}`, form);
+      } else {
+        await API.post('/anamnesis', { ...form, fichaTecnica: { id: ficha.id } });
+      }
+      await onSaved();
+      alert('Anamnesis guardada.');
+    } catch (e) { console.error(e); alert('Error guardando anamnesis'); } finally { setSaving(false); }
+  };
+
+  return (
+    <div style={{border:'1px solid #ddd', padding:8}}>
+      <div>
+        <label>Dr. Referidor</label>
+        <input value={form.drReferidor || ''} onChange={e=>setForm({...form,drReferidor:e.target.value})} />
+      </div>
+      <div>
+        <label>Motivo</label>
+        <textarea value={form.motivoConsulta || ''} onChange={e=>setForm({...form,motivoConsulta:e.target.value})} />
+      </div>
+      <div>
+        <label>Antecedentes</label>
+        <textarea value={form.antecedentesEnfermedadActual || ''} onChange={e=>setForm({...form,antecedentesEnfermedadActual:e.target.value})} />
+      </div>
+      <div>
+        <label>Alergias</label>
+        <input type="checkbox" checked={Boolean(form.alergias)} onChange={e=>setForm({...form,alergias:e.target.checked})} />
+        <input placeholder="Cual" value={form.cualAlergia || ''} onChange={e=>setForm({...form,cualAlergia:e.target.value})} />
+      </div>
+      <div style={{marginTop:8}}>
+        <button onClick={handleSave} disabled={saving}>{saving ? 'Guardando...' : 'Guardar Anamnesis'}</button>
+      </div>
+    </div>
+  );
+};
+
+const DiagnosticoEditor = ({ diag, fichaId, onSaved }) => {
+  const [form, setForm] = useState({ ...(diag || {}) });
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      if (form.id) {
+        await API.put(`/diagnosticos/${form.id}`, form);
+      } else {
+        await API.post('/diagnosticos', { ...form, fichaTecnica: { id: fichaId } });
+      }
+      await onSaved();
+      alert('Diagnóstico guardado.');
+    } catch (e) { console.error(e); alert('Error guardando diagnóstico'); } finally { setSaving(false); }
+  };
+
+  return (
+    <div style={{border:'1px solid #ddd', padding:8}}>
+      <div><strong>Pieza:</strong> <input value={form.piezaDental || ''} onChange={e=>setForm({...form,piezaDental:e.target.value})} /></div>
+      <div>
+        <label>Diagnóstico pulpar</label>
+        <textarea value={form.diagnosticoPulpar || ''} onChange={e=>setForm({...form,diagnosticoPulpar:e.target.value})} />
+      </div>
+      <div>
+        <label>Plan tratamiento</label>
+        <textarea value={form.planTratamiento || ''} onChange={e=>setForm({...form,planTratamiento:e.target.value})} />
+      </div>
+      <div style={{marginTop:8}}>
+        <button onClick={handleSave} disabled={saving}>{saving ? 'Guardando...' : 'Guardar Diagnóstico'}</button>
+      </div>
     </div>
   );
 };
