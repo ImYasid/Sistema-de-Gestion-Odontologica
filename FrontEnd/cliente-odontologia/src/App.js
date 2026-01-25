@@ -1,21 +1,35 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Odontograma from '../src/components/odontograma/Odontograma';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Odontograma from './components/odontograma/Odontograma';
+import Navbar from './components/Navbar';
+import Login from './components/Login';
+import Dashboard from './pages/Dashboard';
+import Pacientes from './pages/Pacientes';
+import Fichas from './pages/Fichas';
+import authService from './services/authService';
+import OdontogramaPage from './pages/OdontogramaPage';
+
+const Protected = ({ children }) => {
+  return authService.isAuthenticated() ? children : <Navigate to="/login" replace />;
+};
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <header style={{ backgroundColor: '#282c34', padding: '20px', color: 'white', marginBottom: '20px' }}>
+        <header style={{ backgroundColor: '#282c34', padding: '20px', color: 'white', marginBottom: '8px' }}>
           <h1>Sistema Gestión Odontológica</h1>
         </header>
 
+        <Navbar />
+
         <Routes>
-          {/* Ruta de prueba: Simulamos que vemos al paciente con ID 1 */}
-          <Route path="/" element={<Odontograma pacienteId={1} />} />
-          
-          {/* Ruta dummy para cuando hagan clic en "+ Ficha" */}
-          <Route path="/fichas/nueva" element={<h2>Aquí iría el formulario de Endodoncia (Persona 3)</h2>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
+          <Route path="/pacientes" element={<Protected><Pacientes /></Protected>} />
+          <Route path="/fichas" element={<Protected><Fichas /></Protected>} />
+          <Route path="/odontograma" element={<Protected><OdontogramaPage /></Protected>} />
+          <Route path="/" element={<Navigate to="/odontograma" replace />} />
         </Routes>
       </div>
     </BrowserRouter>

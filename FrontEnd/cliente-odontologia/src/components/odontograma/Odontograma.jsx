@@ -19,7 +19,8 @@ const Odontograma = ({ pacienteId }) => {
 
   const cargarDientes = async () => {
     try {
-      const response = await axios.get(`http://localhost:8084/odontograma/${pacienteId}`);
+      // endpoint backend: GET /api/odontograma/{pacienteId}
+      const response = await axios.get(`http://localhost:8084/api/odontograma/${pacienteId}`);
       setDientes(response.data);
     } catch (error) { console.error(error); }
   };
@@ -42,9 +43,10 @@ const Odontograma = ({ pacienteId }) => {
     await guardarCambio(numero, { ...data, estado: nuevoEstado });
     
     if(nuevoEstado === 'ENDODONCIA_PENDIENTE') {
-        if(window.confirm(`¿Crear ficha de Endodoncia para el diente ${numero}?`)) {
-            navigate(`/fichas/nueva?paciente=${pacienteId}&diente=${numero}`);
-        }
+      if(window.confirm(`¿Crear ficha de Endodoncia para el diente ${numero}?`)) {
+        // Navegamos a la vista de fichas y le pasamos los parámetros para crear una ficha y diagnostico
+        navigate(`/fichas?paciente=${pacienteId}&diente=${numero}`);
+      }
     }
   };
 
@@ -76,13 +78,30 @@ const Odontograma = ({ pacienteId }) => {
 
       // Enviamos al backend
       await axios.post('http://localhost:8084/api/odontograma', {
-          pacienteId, 
-          numeroDiente: numero, 
+          pacienteId,
+          numeroDiente: numero,
           estado: dataToSave.estado,
-          // Truco: Si tu backend solo tiene un campo de texto extra, guardamos el JSON de caras ahí
-          observacion: JSON.stringify(dataToSave.caras) 
+          observacion: typeof dataToSave.caras === 'string' ? dataToSave.caras : JSON.stringify(dataToSave.caras || {})
       });
     } catch(e) { console.error("Error guardando", e); }
+  };
+
+  // Guardar todo el odontograma (envía todos los dientes al backend)
+  const guardarTodo = async () => {
+    try {
+      const promesas = dientes.map(d => axios.post('http://localhost:8084/api/odontograma', {
+        pacienteId,
+        numeroDiente: d.numeroDiente,
+        estado: d.estado || 'SANO',
+        observacion: typeof d.observacion === 'string' ? d.observacion : JSON.stringify(d.caras || {})
+      }).catch(e => { console.error('Error guardando diente', d.numeroDiente, e); }));
+
+      await Promise.all(promesas);
+      alert('Odontograma guardado.');
+    } catch (e) {
+      console.error('Error guardando odontograma', e);
+      alert('Error al guardar odontograma');
+    }
   };
 
   // --- RENDER ---
@@ -101,7 +120,7 @@ const Odontograma = ({ pacienteId }) => {
       <div className="columna-dental" key={numArriba}>
         {/* === DIENTE SUPERIOR === */}
         <div className="bloque-diente">
-             {dataArriba.estado === 'ENDODONCIA_PENDIENTE' && <span className="badge-ficha" onClick={() => navigate(`/fichas/nueva?diente=${numArriba}`)}>+Ficha</span>}
+             {dataArriba.estado === 'ENDODONCIA_PENDIENTE' && <span className="badge-ficha" onClick={() => navigate(`/fichas?paciente=${pacienteId}&diente=${numArriba}`)}>+Ficha</span>}
              
              {/* Raíz Realista */}
              <DienteDibujo 
@@ -141,7 +160,7 @@ const Odontograma = ({ pacienteId }) => {
                 onClick={() => handleRootClick(numAbajo)} 
              />
 
-             {dataAbajo.estado === 'ENDODONCIA_PENDIENTE' && <span className="badge-ficha" onClick={() => navigate(`/fichas/nueva?diente=${numAbajo}`)}>+Ficha</span>}
+             {dataAbajo.estado === 'ENDODONCIA_PENDIENTE' && <span className="badge-ficha" onClick={() => navigate(`/fichas?paciente=${pacienteId}&diente=${numAbajo}`)}>+Ficha</span>}
         </div>
       </div>
     );
@@ -206,9 +225,10 @@ const Odontograma = ({ pacienteId }) => {
             <div className="legend-item"><span className="color-box azul"></span> Restaurado</div>
             <div className="legend-item"><span className="color-box amarillo"></span> Endodoncia</div>
             <hr/>
-            <button className="btn-reset" onClick={limpiarTodo}>
-            Limpiar Todo
-            </button>
+            <div style={{display:'flex', gap:8}}>
+              <button className="btn-reset" onClick={limpiarTodo}>Limpiar Todo</button>
+              <button className="btn-save" onClick={guardarTodo}>Guardar Odontograma</button>
+            </div>
         </div>
 
         <div className="panel-boca">
