@@ -52,7 +52,7 @@ Una vez desplegado el sistema, la documentación interactiva de los endpoints es
 
 La guía detallada para el uso de la aplicación por parte de doctores y administradores se encuentra disponible en formato PDF en el directorio de documentación:
 
-> 📘 **[Descargar Manual de Usuario](./Docs/ManualUsuario.txt)**
+> 📘 **[Descargar Manual de Usuario](./Docs/ManualUsuario.md)**
 
 
 ---
