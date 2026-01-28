@@ -1,9 +1,9 @@
 package com.endonova.odontogramaservice.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor; // <--- Nuevo
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;  // <--- Nuevo
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -24,11 +24,7 @@ public class Diente {
 
     private String estado; 
 
-    private String color; 
-    
-    private String observacion;
-
-	public Long getId() {
+    public Long getId() {
 		return id;
 	}
 
@@ -76,5 +72,7 @@ public class Diente {
 		this.observacion = observacion;
 	}
 
+	private String color; 
     
+    private String observacion;
 }

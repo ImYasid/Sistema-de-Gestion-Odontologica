@@ -7,7 +7,8 @@ const API_PAC = axios.create({ baseURL: 'http://localhost:8082' });
 
 const Fichas = () => {
   const [searchParams] = useSearchParams();
-  const pacienteId = searchParams.get('paciente');
+  const pacienteIdParam = searchParams.get('paciente');
+  const pacienteId = pacienteIdParam ? Number(pacienteIdParam) : null;
   const [fichas, setFichas] = useState([]);
   const [creating, setCreating] = useState(false);
   const [paciente, setPaciente] = useState(null);
@@ -20,7 +21,7 @@ const Fichas = () => {
   const [editingDiagnosticos, setEditingDiagnosticos] = useState({});
 
   const fetchPaciente = async () => {
-    if (!pacienteId) return;
+    if (!pacienteId || pacienteId <= 0) return;
     try {
       const resp = await API_PAC.get(`/pacientes/${pacienteId}`);
       setPaciente(resp.data || null);
@@ -28,7 +29,7 @@ const Fichas = () => {
   };
 
   const fetchFichas = async () => {
-    if (!pacienteId) return;
+    if (!pacienteId || pacienteId <= 0) return;
     try {
       const resp = await API.get(`/fichas/paciente/${pacienteId}`);
       const lista = resp.data || [];

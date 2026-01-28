@@ -1,14 +1,17 @@
 package com.endonova.pacientesservice.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "pacientes")
 @Data
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class Paciente {
 
     @Id
@@ -23,6 +26,7 @@ public class Paciente {
 
     @Column(nullable = false)
     private String apellido;
+    
     private String telefono;
     private String direccion;
     private String email;
@@ -30,3 +34,5 @@ public class Paciente {
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 }
+
+

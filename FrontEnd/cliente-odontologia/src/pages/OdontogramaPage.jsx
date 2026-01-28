@@ -26,7 +26,13 @@ const OdontogramaPage = () => {
     e.preventDefault();
     setCreating(true);
     try {
-      const resp = await API_PAC.post('/pacientes', form);
+      // Limpiar campos vacíos
+      const datosLimpios = {};
+      if (form.nombre && form.nombre.trim()) datosLimpios.nombre = form.nombre.trim();
+      if (form.apellido && form.apellido.trim()) datosLimpios.apellido = form.apellido.trim();
+      if (form.cedula && form.cedula.trim()) datosLimpios.cedula = form.cedula.trim();
+      
+      const resp = await API_PAC.post('/pacientes', datosLimpios);
       const id = resp.data.id;
       setPacienteId(id);
       await fetchPacientes();

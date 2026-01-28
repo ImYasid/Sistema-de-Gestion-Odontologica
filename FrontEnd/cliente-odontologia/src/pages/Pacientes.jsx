@@ -25,7 +25,15 @@ const Pacientes = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const resp = await API.post('/pacientes', form);
+      // Limpiar campos vacíos
+      const datosLimpios = {};
+      if (form.nombre && form.nombre.trim()) datosLimpios.nombre = form.nombre.trim();
+      if (form.apellido && form.apellido.trim()) datosLimpios.apellido = form.apellido.trim();
+      if (form.cedula && form.cedula.trim()) datosLimpios.cedula = form.cedula.trim();
+      if (form.telefono && form.telefono.trim()) datosLimpios.telefono = form.telefono.trim();
+      if (form.email && form.email.trim()) datosLimpios.email = form.email.trim();
+      
+      const resp = await API.post('/pacientes', datosLimpios);
       setForm(emptyForm);
       // Refresh
       await fetchPacientes();

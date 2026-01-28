@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.endonova</groupId>
-    <artifactId>pacientes-service</artifactId>
+    <artifactId>odontograma-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>pacientes-service</name>
-    <description>pacientes-service</description>
+    <name>odontograma-service</name>
+    <description>odontograma-service</description>
     <url/>
     <licenses>
         <license/>
@@ -73,7 +73,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.endonova.pacientesservice.PacientesServiceApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
