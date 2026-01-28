@@ -100,6 +100,7 @@ Se recomienda levantar los servicios en el siguiente orden para evitar fallos de
 
 ```bash
 cd frontend
+cd cliente-odontologia
 npm install
 npm start
 
