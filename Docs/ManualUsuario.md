@@ -7,8 +7,6 @@
 4. [Compilación e Instalación](#compilación-e-instalación)
 5. [Iniciación de Servicios](#iniciación-de-servicios)
 6. [Acceso a la Aplicación](#acceso-a-la-aplicación)
-7. [Funcionalidades Principales](#funcionalidades-principales)
-8. [Solución de Problemas](#solución-de-problemas)
 
 ---
 
@@ -301,5 +299,6 @@ Para reportar problemas o sugerencias, contacta al equipo de desarrollo.
 
 **Última actualización**: Enero 2026
 **Versión del Sistema**: 1.0.0
+
 
 
